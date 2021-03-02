@@ -1,0 +1,25 @@
+{
+  "name": "the-web-developer-bootcamp-2021",
+  "version": "1.0.0",
+  "description": "Hi! Welcome to the brand new version of The Web Developer Bootcamp, Udemy's most popular web development course.  This course was just completely overhauled to prepare students for the 2021 job market, with over 60 hours of brand new content. This is the only course you need to learn web development. There are a lot of options for online developer training, but this course is without a doubt the most comprehensive and effective on the market.  Here's why:",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marianomat/The-Web-Developer-Bootcamp-2021.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/marianomat/The-Web-Developer-Bootcamp-2021/issues"
+  },
+  "homepage": "https://github.com/marianomat/The-Web-Developer-Bootcamp-2021#readme",
+  "dependencies": {
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "method-override": "^3.0.0",
+    "mongoose": "^5.11.18"
+  }
+}
