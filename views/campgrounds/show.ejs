@@ -1,21 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Show</title>
-    </head>
-    <body>
-        <h1>Campground <%= campground.title %></h1>
-        <h2>Location: <%= campground.location %></h2>
-        <a href="/campgrounds/<%= campground._id %>/edit">Edit</a>
-        <a href="/campgrounds">GO BACK</a>
-        <form
-            action="/campgrounds/<%= campground._id %>?_method=DELETE"
-            method="POST"
-        >
-            <button>DELETE</button>
-        </form>
-    </body>
-</html>
+<% layout("layouts/boilerplate") %>
+    <div class="row">
+        <div class="col-6 offset-3">
+            <div class="card mb-3">
+                <img src="<%= campground.image  %>" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Campground <%= campground.title %>
+                    </h5>
+                    <p class="card-text">
+                        <%= campground.description%>
+                    </p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item text-muted">
+                        <%= campground.location %>
+                    </li>
+                    <li class="list-group-item">$<%= campground.price %>/Night</li>
+                </ul>
+                <div class="card-body">
+                    <a href="/campgrounds/<%= campground._id %>/edit" class="card-link btn btn-primary">EDIT</a>
+
+                    <form class="d-inline" action="/campgrounds/<%= campground._id %>?_method=DELETE" method="POST">
+                        <a class="card-link btn btn-danger">DELETE</a>
+
+                    </form>
+                </div>
+                <div class="card-footer text-muted">
+                    2 days ago
+                </div>
+            </div>
+        </div>
