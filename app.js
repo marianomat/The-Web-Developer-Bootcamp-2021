@@ -5,10 +5,14 @@ const express = require("express"),
 	methodOverride = require("method-override"),
 	ejsMate = require("ejs-mate"),
 	ExpressError = require("./utils/ExpressError"),
-	campgrounds = require("./routes/campgrounds"),
-	reviews = require("./routes/reviews"),
 	session = require("express-session"),
-	flash = require("connect-flash");
+	flash = require("connect-flash"),
+	passport = require("passport"),
+	LocalStrategy = require("passport-local"),
+	campgroundsRoutes = require("./routes/campgrounds"),
+	reviewsRoutes = require("./routes/reviews"),
+	userRoutes = require("./routes/users"),
+	User = require("./models/user");
 
 mongoose.connect("mongodb://localhost: 27017/yelp-camp", {
 	useNewUrlParser: true,
@@ -51,17 +55,28 @@ const sessionConfig = {
 };
 app.use(session(sessionConfig));
 
+//*Config passport (after use.session)
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
 //*Configure flash messages
 app.use(flash());
 //? flash middleware
+
+//*In locals I have acces to data in every EJS, but not needing to actually pass it in the render
 app.use((req, res, next) => {
+	res.locals.currentUser = req.user;
 	res.locals.success = req.flash("success");
 	res.locals.error = req.flash("error");
 	next();
 });
 //*Router
-app.use("/campgrounds", campgrounds);
-app.use("/campgrounds/:id/reviews", reviews);
+app.use("/campgrounds", campgroundsRoutes);
+app.use("/campgrounds/:id/reviews", reviewsRoutes);
+app.use("/", userRoutes);
 
 //* ROUTES!!
 

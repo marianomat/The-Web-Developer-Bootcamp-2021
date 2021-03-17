@@ -11,7 +11,14 @@
                 </a>
                 <a class="nav-link" href="/campgrounds">Campgrounds</a>
                 <a class="nav-link" href="/campgrounds/new">Add Campground</a>
-
+            </div>
+            <div class="ms-auto navbar-nav">
+                <% if(!currentUser) {%>
+                    <a class="nav-link" href="/login">Log In</a>
+                    <a class="nav-link" href="/register">Register</a>
+                    <% } else { %>
+                        <a class="nav-link" href="/logout">log Out</a>
+                        <% } %>
             </div>
         </div>
     </div>
