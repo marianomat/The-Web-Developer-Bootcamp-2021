@@ -12,8 +12,16 @@ module.exports.renderNewForm = (req, res) => {
 module.exports.createCampground = async (req, res, next) => {
 	//*Add new Campground after passing client and server side validations
 	const campground = new Campground(req.body.campground);
+	//*Add iomages url and info from the cloudnary
+	campground.images = req.files.map((file) => {
+		return {
+			url: file.path,
+			filename: file.filename,
+		};
+	});
 	//*Add author
 	campground.author = req.user._id;
+	console.log(campground);
 	await campground.save();
 	//*Set up flash msg
 	req.flash("success", "Successfully made a new campground!");

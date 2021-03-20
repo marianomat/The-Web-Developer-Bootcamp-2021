@@ -1,3 +1,7 @@
+//*If we are in development, it requires dotenv package, then it takes the variables from .env and make them accesible in the app
+if (process.env.NODE_ENV !== "production") {
+	require("dotenv").config();
+}
 const express = require("express"),
 	app = express(),
 	path = require("path"),
