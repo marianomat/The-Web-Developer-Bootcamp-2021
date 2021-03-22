@@ -24,7 +24,10 @@
                         Looks good!
                     </div>
                 </div> -->
-                <input type="file" name="image" multiple>
+                <div class="mb-3">
+                    <label for="imgsFiles" class="form-label">Chose Images</label>
+                    <input class="form-control" type="file" id="imgsFiles" name="image" multiple>
+                </div>
                 <div class="mb-3">
                     <label class="form-label" for="description">Description</label>
                     <textarea class="form-control" type="text" name="campground[description]" id="description" required></textarea>
