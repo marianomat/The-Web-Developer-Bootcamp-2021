@@ -16,7 +16,8 @@ const express = require("express"),
 	campgroundsRoutes = require("./routes/campgrounds"),
 	reviewsRoutes = require("./routes/reviews"),
 	userRoutes = require("./routes/users"),
-	User = require("./models/user");
+	User = require("./models/user"),
+	mongoSanitize = require("express-mongo-sanitize");
 
 mongoose.connect("mongodb://localhost: 27017/yelp-camp", {
 	useNewUrlParser: true,
@@ -45,6 +46,9 @@ app.use(methodOverride("_method"));
 
 //*Serve statics files
 app.use(express.static(path.join(__dirname, "public")));
+
+//*Sanitize inputs
+app.use(mongoSanitize());
 
 //*config express-session
 const sessionConfig = {
