@@ -18,9 +18,14 @@ const express = require("express"),
 	userRoutes = require("./routes/users"),
 	User = require("./models/user"),
 	helmet = require("helmet"),
+	MongoStore = require("connect-mongo"),
+	dbUrl = process.env.DB_URL || "mongodb://localhost: 27017/yelp-camp",
 	mongoSanitize = require("express-mongo-sanitize");
 
-mongoose.connect("mongodb://localhost: 27017/yelp-camp", {
+//*mongo url dbUrl = process.env.DB_URL, */
+//*Local url "mongodb://localhost: 27017/yelp-camp"
+
+mongoose.connect(dbUrl, {
 	useNewUrlParser: true,
 	useCreateIndex: true,
 	useUnifiedTopology: true,
@@ -51,10 +56,25 @@ app.use(express.static(path.join(__dirname, "public")));
 //*Sanitize inputs
 app.use(mongoSanitize());
 
+const secret = process.env.SECRET || "secretopadree";
+
+//*Config so session uses mongo and not memory
+const store = MongoStore.create({
+	mongoUrl: dbUrl,
+	touchAfter: 24 * 60 * 60,
+	crypto: {
+		secret,
+	},
+});
+store.on("error", function (e) {
+	console.log("SESSION STORE ERROR", e);
+});
+
 //*config express-session
 const sessionConfig = {
+	store,
 	name: "gatardo",
-	secret: "secretopadree",
+	secret,
 	resave: false,
 	saveUninitialized: true,
 	cookie: {
