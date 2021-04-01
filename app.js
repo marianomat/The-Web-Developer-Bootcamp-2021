@@ -17,6 +17,7 @@ const express = require("express"),
 	reviewsRoutes = require("./routes/reviews"),
 	userRoutes = require("./routes/users"),
 	User = require("./models/user"),
+	helmet = require("helmet"),
 	mongoSanitize = require("express-mongo-sanitize");
 
 mongoose.connect("mongodb://localhost: 27017/yelp-camp", {
@@ -52,11 +53,13 @@ app.use(mongoSanitize());
 
 //*config express-session
 const sessionConfig = {
+	name: "gatardo",
 	secret: "secretopadree",
 	resave: false,
 	saveUninitialized: true,
 	cookie: {
 		httpOnly: true,
+		//secure: true, //* ONLY WORKS IF IT A HTTPS not HTTP, but localhost is not secure so just comment
 		expires: Date.now() + 1000 * 60 * 60 * 24 * 7, //!date.now is on ms, so 1000ms * 60seg * 60min * 24 hs * 7days
 		maxAge: 1000 * 60 * 60 * 24 * 7,
 	},
@@ -73,6 +76,54 @@ passport.deserializeUser(User.deserializeUser());
 //*Configure flash messages
 app.use(flash());
 //? flash middleware
+
+//*Using helment
+app.use(helmet());
+
+const scriptSrcUrls = [
+	"https://stackpath.bootstrapcdn.com/",
+	"https://api.tiles.mapbox.com/",
+	"https://api.mapbox.com/",
+	"https://kit.fontawesome.com/",
+	"https://cdnjs.cloudflare.com/",
+	"https://cdn.jsdelivr.net",
+];
+const styleSrcUrls = [
+	"https://kit-free.fontawesome.com/",
+	"https://stackpath.bootstrapcdn.com/",
+	"https://api.mapbox.com/",
+	"https://api.tiles.mapbox.com/",
+	"https://fonts.googleapis.com/",
+	"https://use.fontawesome.com/",
+	"https://cdn.jsdelivr.net",
+];
+const connectSrcUrls = [
+	"https://api.mapbox.com/",
+	"https://a.tiles.mapbox.com/",
+	"https://b.tiles.mapbox.com/",
+	"https://events.mapbox.com/",
+];
+const fontSrcUrls = [];
+app.use(
+	helmet.contentSecurityPolicy({
+		directives: {
+			defaultSrc: [],
+			connectSrc: ["'self'", ...connectSrcUrls],
+			scriptSrc: ["'unsafe-inline'", "'self'", ...scriptSrcUrls],
+			styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
+			workerSrc: ["'self'", "blob:"],
+			objectSrc: [],
+			imgSrc: [
+				"'self'",
+				"blob:",
+				"data:",
+				"https://res.cloudinary.com/dynrt1cf7/", //SHOULD MATCH YOUR CLOUDINARY ACCOUNT!
+				"https://images.unsplash.com/",
+			],
+			fontSrc: ["'self'", ...fontSrcUrls],
+		},
+	})
+);
 
 //*In locals I have acces to data in every EJS, but not needing to actually pass it in the render
 app.use((req, res, next) => {
