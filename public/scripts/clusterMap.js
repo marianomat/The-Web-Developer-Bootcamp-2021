@@ -2,7 +2,7 @@ mapboxgl.accessToken = MAPBOX_TOKEN;
 var map = new mapboxgl.Map({
 	container: "cluster-map",
 	style: "mapbox://styles/mapbox/light-v10",
-	center: [-103.59179687498357, 40.66995747013945],
+	center: [-55.9215, -39.6461],
 	zoom: 3,
 });
 
@@ -34,24 +34,8 @@ map.on("load", function () {
 			//   * Blue, 20px circles when point count is less than 100
 			//   * Yellow, 30px circles when point count is between 100 and 750
 			//   * Pink, 40px circles when point count is greater than or equal to 750
-			"circle-color": [
-				"step",
-				["get", "point_count"],
-				"#51bbd6",
-				10,
-				"#f1f075",
-				30,
-				"#f28cb1",
-			],
-			"circle-radius": [
-				"step",
-				["get", "point_count"],
-				15,
-				10,
-				20,
-				30,
-				25,
-			],
+			"circle-color": ["step", ["get", "point_count"], "#51bbd6", 10, "#f1f075", 30, "#f28cb1"],
+			"circle-radius": ["step", ["get", "point_count"], 15, 10, 20, 30, 25],
 		},
 	});
 
@@ -86,17 +70,14 @@ map.on("load", function () {
 			layers: ["clusters"],
 		});
 		var clusterId = features[0].properties.cluster_id;
-		map.getSource("campgrounds").getClusterExpansionZoom(
-			clusterId,
-			function (err, zoom) {
-				if (err) return;
+		map.getSource("campgrounds").getClusterExpansionZoom(clusterId, function (err, zoom) {
+			if (err) return;
 
-				map.easeTo({
-					center: features[0].geometry.coordinates,
-					zoom: zoom,
-				});
-			}
-		);
+			map.easeTo({
+				center: features[0].geometry.coordinates,
+				zoom: zoom,
+			});
+		});
 	});
 
 	// When a click event occurs on a feature in
@@ -114,10 +95,7 @@ map.on("load", function () {
 			coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
 		}
 
-		new mapboxgl.Popup()
-			.setLngLat(coordinates)
-			.setHTML(popUpMarkup)
-			.addTo(map);
+		new mapboxgl.Popup().setLngLat(coordinates).setHTML(popUpMarkup).addTo(map);
 	});
 
 	map.on("mouseenter", "clusters", function () {
